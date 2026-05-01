@@ -43,6 +43,22 @@ def create_app() -> Flask:
     app.secret_key = SESSION_SECRET
     app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax")
 
+    # The static frontend is served from a different origin (S3/CloudFront),
+    # so we allow that origin and the bearer-token flow. Cookies are not
+    # used cross-origin; the frontend authenticates via the issued JWT.
+    allowed_origin = os.environ.get("FRONTEND_ORIGIN", "*")
+
+    @app.after_request
+    def cors(resp):
+        resp.headers["Access-Control-Allow-Origin"] = allowed_origin
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        resp.headers["Access-Control-Allow-Methods"] = "GET, POST, DELETE, OPTIONS"
+        return resp
+
+    @app.route("/api/<path:_>", methods=["OPTIONS"])
+    def cors_preflight(_):
+        return ("", 204)
+
     @app.get("/health")
     def health():
         return {"status": "ok"}, 200
