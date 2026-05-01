@@ -51,16 +51,16 @@ Resources:
       Events:
         Login:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /login,    Method: post }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/login,    Method: post }
         Register:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /register, Method: post }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/register, Method: post }
         Logout:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /logout,   Method: post }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/logout,   Method: post }
         Me:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /me,       Method: get }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/me,       Method: get }
 
   MusicFn:
     Type: AWS::Serverless::Function
@@ -71,7 +71,7 @@ Resources:
       Events:
         Search:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /music, Method: get }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/music, Method: get }
 
   SubscriptionsFn:
     Type: AWS::Serverless::Function
@@ -82,13 +82,13 @@ Resources:
       Events:
         List:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: get }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/subscriptions, Method: get }
         Add:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: post }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/subscriptions, Method: post }
         Remove:
           Type: Api
-          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: delete }
+          Properties: { RestApiId: !Ref MusicApi, Path: /api/subscriptions, Method: delete }
 
 Outputs:
   ApiEndpoint:

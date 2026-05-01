@@ -65,10 +65,10 @@ def handler(event, _context):
         return respond(204)
 
     routes = {
-        ("POST", "/login"): _login,
-        ("POST", "/register"): _register,
-        ("POST", "/logout"): _logout,
-        ("GET", "/me"): _me,
+        ("POST", "/api/login"): _login,
+        ("POST", "/api/register"): _register,
+        ("POST", "/api/logout"): _logout,
+        ("GET", "/api/me"): _me,
     }
     fn = routes.get((method, resource))
     if not fn:
