@@ -17,9 +17,11 @@ function authHeaders() {
 }
 
 async function request(path, { method = "GET", body } = {}) {
+  // credentials:'omit' so the API can return Allow-Origin:* — the
+  // Authorization header carries our session token; we don't need cookies.
   const res = await fetch(base() + path, {
     method,
-    credentials: "include",
+    credentials: "omit",
     headers: {
       "Content-Type": "application/json",
       ...authHeaders(),
