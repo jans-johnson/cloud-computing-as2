@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Music Subscription</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <h2>Music Subscription</h2>
+      <div>
+        <span id="user-area" style="margin-right:1rem;color:var(--muted);"></span>
+        <a class="link" href="#" id="logout">Logout</a>
+      </div>
+    </header>
+
+    <section class="section" aria-labelledby="subs-h">
+      <h3 id="subs-h">Your subscriptions</h3>
+      <div id="subs" class="song-list"></div>
+      <p id="subs-empty" class="empty">No subscriptions yet — search below to add some.</p>
+    </section>
+
+    <section class="section" aria-labelledby="query-h">
+      <h3 id="query-h">Find songs</h3>
+      <form id="query-form" novalidate>
+        <div class="query-grid">
+          <input type="text" id="title" placeholder="Title" />
+          <input type="text" id="artist" placeholder="Artist" />
+          <input type="text" id="album" placeholder="Album" />
+          <input type="number" id="year" placeholder="Year" />
+        </div>
+        <button type="submit">Query</button>
+        <p class="notice">At least one field is required. Multiple fields combine with AND.</p>
+      </form>
+      <div id="query-error" class="error"></div>
+      <div id="results" class="song-list" style="margin-top:1rem;"></div>
+    </section>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
