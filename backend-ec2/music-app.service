@@ -1,0 +1,17 @@
+[Unit]
+Description=Music subscription Flask backend
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/opt/music-app
+Environment=AWS_REGION=us-east-1
+Environment=PORT=8080
+EnvironmentFile=-/opt/music-app/app.env
+ExecStart=/opt/music-app/.venv/bin/gunicorn -w 2 -b 127.0.0.1:8080 backend-ec2.app:app
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
