@@ -1,0 +1,40 @@
+{
+  "family": "music-app",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::REPLACE_ACCOUNT_ID:role/LabRole",
+  "taskRoleArn": "arn:aws:iam::REPLACE_ACCOUNT_ID:role/LabRole",
+  "containerDefinitions": [
+    {
+      "name": "music-app",
+      "image": "REPLACE_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/music-app:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "AWS_REGION", "value": "us-east-1" },
+        { "name": "S3_BUCKET", "value": "as2-music-artist-images" },
+        { "name": "FRONTEND_ORIGIN", "value": "*" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/music-app",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "python -c 'import urllib.request,sys;sys.exit(0 if urllib.request.urlopen(\"http://localhost:8080/health\").status==200 else 1)'"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+**/__pycache__
+**/*.pyc
+.git
+.venv
+venv
+backend-ecs
+backend-lambda
+frontend
+infra
+data
+*.pdf
+.gitignore
