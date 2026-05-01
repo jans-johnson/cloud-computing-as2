@@ -1,2 +1,1 @@
-boto3>=1.34.0
-itsdangerous>=2.1.0
+# boto3 is bundled with the Lambda Python runtime; no other deps required.
