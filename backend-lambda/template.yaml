@@ -26,10 +26,8 @@ Globals:
     Timeout: 10
     MemorySize: 256
     Architectures: [x86_64]
-    Role: !Ref LabRoleArn
     Environment:
       Variables:
-        AWS_REGION: !Ref AWS::Region
         S3_BUCKET: !Ref S3Bucket
         SESSION_SECRET: !Ref SessionSecret
         FRONTEND_ORIGIN: !Ref FrontendOrigin
@@ -49,6 +47,7 @@ Resources:
     Properties:
       CodeUri: ../
       Handler: backend-lambda.handlers.auth.handler
+      Role: !Ref LabRoleArn
       Events:
         Login:
           Type: Api
@@ -68,6 +67,7 @@ Resources:
     Properties:
       CodeUri: ../
       Handler: backend-lambda.handlers.music.handler
+      Role: !Ref LabRoleArn
       Events:
         Search:
           Type: Api
@@ -78,6 +78,7 @@ Resources:
     Properties:
       CodeUri: ../
       Handler: backend-lambda.handlers.subscriptions.handler
+      Role: !Ref LabRoleArn
       Events:
         List:
           Type: Api
