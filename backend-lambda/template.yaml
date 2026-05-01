@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Music subscription serverless backend — three Lambdas behind a REST
+  API Gateway. Genuinely RESTful: each method on each resource is
+  bound to the appropriate handler.
+
+Parameters:
+  S3Bucket:
+    Type: String
+    Default: as2-music-artist-images
+  SessionSecret:
+    Type: String
+    NoEcho: true
+    Default: change-me-before-deploy
+  FrontendOrigin:
+    Type: String
+    Default: "*"
+  LabRoleArn:
+    Type: String
+    Description: ARN of the pre-created LabRole (AWS Academy)
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 10
+    MemorySize: 256
+    Architectures: [x86_64]
+    Role: !Ref LabRoleArn
+    Environment:
+      Variables:
+        AWS_REGION: !Ref AWS::Region
+        S3_BUCKET: !Ref S3Bucket
+        SESSION_SECRET: !Ref SessionSecret
+        FRONTEND_ORIGIN: !Ref FrontendOrigin
+
+Resources:
+  MusicApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  AuthFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: backend-lambda.handlers.auth.handler
+      Events:
+        Login:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /login,    Method: post }
+        Register:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /register, Method: post }
+        Logout:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /logout,   Method: post }
+        Me:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /me,       Method: get }
+
+  MusicFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: backend-lambda.handlers.music.handler
+      Events:
+        Search:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /music, Method: get }
+
+  SubscriptionsFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: backend-lambda.handlers.subscriptions.handler
+      Events:
+        List:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: get }
+        Add:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: post }
+        Remove:
+          Type: Api
+          Properties: { RestApiId: !Ref MusicApi, Path: /subscriptions, Method: delete }
+
+Outputs:
+  ApiEndpoint:
+    Description: Base URL for the REST API
+    Value: !Sub "https://${MusicApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
