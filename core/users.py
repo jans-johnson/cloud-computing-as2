@@ -5,6 +5,8 @@ this assignment only — production would salt+hash with bcrypt/argon2.
 Subscriptions live as a String Set on the same item to avoid a third
 table while keeping reads to one GetItem.
 """
+from __future__ import annotations
+
 from botocore.exceptions import ClientError
 
 from .db import get_login_table

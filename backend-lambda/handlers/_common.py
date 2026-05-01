@@ -5,6 +5,8 @@ return the standard {statusCode, headers, body} dict. Auth uses the
 signed token from core.auth so the function can stay stateless across
 invocations.
 """
+from __future__ import annotations
+
 import json
 import os
 

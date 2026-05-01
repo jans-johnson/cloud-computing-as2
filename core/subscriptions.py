@@ -6,6 +6,8 @@ Each membership token encodes the music table's composite key:
 This keeps writes to one UpdateItem (atomic ADD/DELETE) and reads to one
 GetItem on the user, then a BatchGet against the music table.
 """
+from __future__ import annotations
+
 from boto3.dynamodb.conditions import Key
 
 from .db import get_login_table, get_music_table

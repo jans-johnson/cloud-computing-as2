@@ -11,6 +11,8 @@ NOT unique — Taylor Swift "Delicate" appears twice on different albums):
 
 Queries that filter only on year or only on album fall back to Scan.
 """
+from __future__ import annotations
+
 from boto3.dynamodb.conditions import Key, Attr
 
 from config import MUSIC_TITLE_GSI, MUSIC_YEAR_LSI

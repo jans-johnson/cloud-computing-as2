@@ -8,6 +8,8 @@ Session strategy: Flask's signed-cookie session. The `Authorization`
 header is also accepted so the same endpoints can be hit from a
 static frontend that prefers a token over cookies.
 """
+from __future__ import annotations
+
 import os
 import sys
 
