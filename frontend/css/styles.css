@@ -151,3 +151,53 @@ button.danger:hover { background: #a01622; }
 .empty { color: var(--muted); font-size: 0.9rem; padding: 0.5rem 0; }
 
 .notice { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+
+/* Backend selector — segmented control */
+.backend-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.backend-toggle-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.backend-toggle-btn {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.backend-toggle-btn:hover:not(:disabled) {
+  background: var(--bg);
+  border-color: var(--primary);
+}
+.backend-toggle-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.backend-toggle-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Toggle when placed inside a login/register card */
+.card-toggle {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  justify-content: center;
+  display: flex;
+}
