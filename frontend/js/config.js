@@ -10,7 +10,7 @@
   const BACKENDS = {
     ec2:    "http://ec2-54-196-95-55.compute-1.amazonaws.com",
     ecs:    "http://REPLACE-WITH-ALB-DNS",
-    lambda: "https://REPLACE-WITH-API-ID.execute-api.us-east-1.amazonaws.com/prod",
+    lambda: "https://jfm18fmx23.execute-api.us-east-1.amazonaws.com/prod",
   };
 
   const ORDER = ["ec2", "ecs", "lambda"];
