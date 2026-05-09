@@ -9,9 +9,11 @@ AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 
 LOGIN_TABLE = os.environ.get("LOGIN_TABLE", "login")
 MUSIC_TABLE = os.environ.get("MUSIC_TABLE", "music")
+SUBSCRIPTIONS_TABLE = os.environ.get("SUBSCRIPTIONS_TABLE", "subscriptions")
 
 MUSIC_TITLE_GSI = "title-artist-index"
 MUSIC_YEAR_LSI = "artist-year-index"
+SUBSCRIPTIONS_SONG_GSI = "song-index"
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "as2-music-artist-images")
 S3_PRESIGN_TTL = int(os.environ.get("S3_PRESIGN_TTL", "3600"))

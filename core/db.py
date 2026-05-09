@@ -7,7 +7,7 @@ invocations.
 import boto3
 from functools import lru_cache
 
-from config import AWS_REGION, LOGIN_TABLE, MUSIC_TABLE
+from config import AWS_REGION, LOGIN_TABLE, MUSIC_TABLE, SUBSCRIPTIONS_TABLE
 
 
 @lru_cache(maxsize=1)
@@ -21,3 +21,7 @@ def get_login_table():
 
 def get_music_table():
     return get_dynamodb().Table(MUSIC_TABLE)
+
+
+def get_subscriptions_table():
+    return get_dynamodb().Table(SUBSCRIPTIONS_TABLE)
