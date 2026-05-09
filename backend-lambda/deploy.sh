@@ -24,7 +24,11 @@ SESSION_SECRET="${SESSION_SECRET:-$(python3 -c 'import secrets;print(secrets.tok
 
 cd "$HERE"
 
-sam build --template-file template.yaml --use-container
+# --use-container is omitted: requirements.txt is empty (boto3 ships with
+# the Lambda runtime), so there are no native deps that need a Linux build
+# image. This lets the script run from AWS CloudShell, which has SAM CLI
+# preinstalled but no Docker.
+sam build --template-file template.yaml
 
 sam deploy \
   --stack-name "$STACK" \
