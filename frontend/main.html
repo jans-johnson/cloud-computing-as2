@@ -3,45 +3,97 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Music Subscription</title>
+  <title>Music — Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="app">
+
     <header class="topbar">
-      <h2>Music Subscription</h2>
-      <div data-backend-toggle></div>
-      <div>
-        <span id="user-area" style="margin-right:1rem;color:var(--muted);"></span>
-        <a class="link" href="#" id="logout">Logout</a>
+      <h2>&#9654;&nbsp; Music</h2>
+      <div class="topbar-right">
+        <span id="user-area"></span>
+        <a class="link" href="#" id="logout">Logout &rarr;</a>
       </div>
     </header>
 
+    <!-- Backend switcher -->
+    <div class="backend-bar">
+      <span class="backend-label">Backend</span>
+      <div class="backend-pills" id="backend-pills">
+        <button class="pill" data-backend="lambda">Lambda</button>
+        <button class="pill" data-backend="ecs">ECS</button>
+        <button class="pill" data-backend="ec2">EC2</button>
+      </div>
+      <span class="backend-url" id="backend-url"></span>
+    </div>
+
     <section class="section" aria-labelledby="subs-h">
-      <h3 id="subs-h">Your subscriptions</h3>
+      <span class="section-step">— Your Library</span>
+      <h3 id="subs-h">Subscriptions</h3>
       <div id="subs" class="song-list"></div>
       <p id="subs-empty" class="empty">No subscriptions yet — search below to add some.</p>
     </section>
 
     <section class="section" aria-labelledby="query-h">
-      <h3 id="query-h">Find songs</h3>
+      <span class="section-step">— Discover</span>
+      <h3 id="query-h">Find Music</h3>
       <form id="query-form" novalidate>
         <div class="query-grid">
-          <input type="text" id="title" placeholder="Title" />
-          <input type="text" id="artist" placeholder="Artist" />
-          <input type="text" id="album" placeholder="Album" />
-          <input type="number" id="year" placeholder="Year" />
+          <input type="text"   id="title"  placeholder="Title"  />
+          <input type="text"   id="artist" placeholder="Artist" />
+          <input type="text"   id="album"  placeholder="Album"  />
+
+          <input type="number" id="year" placeholder="Year" min="1900" max="2099" />
+
         </div>
-        <button type="submit">Query</button>
-        <p class="notice">At least one field is required. Multiple fields combine with AND.</p>
+        <button type="submit">Search &rarr;</button>
+        <p class="notice">At least one field required. Multiple fields combine with AND.</p>
       </form>
-      <div id="query-error" class="error"></div>
-      <div id="results" class="song-list" style="margin-top:1rem;"></div>
+      <div id="query-error" class="error" style="margin-top:1rem;"></div>
+      <div id="results" class="song-list" style="margin-top:1.25rem;"></div>
     </section>
+
   </div>
 
   <script src="js/config.js"></script>
-  <script defer src="js/backend-toggle.js"></script>
+  <script>
+    // Backend switcher — origin's pill design wired to the verified
+    // window.APP_CONFIG (config.js). setActiveBackend persists the
+    // choice (api_backend), clears the session token (each backend
+    // signs tokens with its own secret) and reloads, so the rest of
+    // the page logic (api.js / main.js) stays untouched.
+    (function () {
+      const cfg = window.APP_CONFIG;
+      const pills = document.getElementById("backend-pills");
+      const urlEl = document.getElementById("backend-url");
+
+      function refresh() {
+        const active = cfg.getActiveBackend();
+        pills.querySelectorAll(".pill").forEach(function (btn) {
+          const key = btn.dataset.backend;
+          btn.classList.toggle("pill-active", key === active);
+          btn.disabled = !cfg.isConfigured(key);
+          if (!cfg.isConfigured(key)) {
+            btn.title = "URL not configured in js/config.js";
+          }
+        });
+        urlEl.textContent = cfg.BACKENDS[active] || "";
+      }
+
+      pills.addEventListener("click", function (e) {
+        const btn = e.target.closest(".pill");
+        if (!btn || btn.disabled) return;
+        // setActiveBackend reloads the page; refresh() re-runs on load.
+        cfg.setActiveBackend(btn.dataset.backend);
+      });
+
+      refresh();
+    })();
+  </script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

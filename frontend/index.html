@@ -3,37 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Music Subscription — Login</title>
+  <title>Music — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <main class="center">
-    <section class="card">
-      <h1>Login</h1>
-      <p class="subtitle">Sign in to your music subscription</p>
+<body class="auth-body">
+  <main class="auth-layout">
+    <div class="auth-panel">
 
-      <div id="error" class="error"></div>
+      <span class="auth-step">— 01 / SIGN IN</span>
 
-      <form id="login-form" novalidate>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required />
+      <h1 class="auth-heading">Press <span class="auth-accent">play.</span></h1>
+      <p class="auth-sub">Sign in to resume your library and pick up where the music left off.</p>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required />
+      <div id="error" class="error auth-error"></div>
 
-        <button type="submit" class="btn-block">Login</button>
+      <form id="login-form" novalidate class="auth-form">
+
+        <div class="auth-field">
+          <label for="email" class="auth-label">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email"
+                 placeholder="you@studio.fm" required class="auth-input" />
+          <span class="auth-field-error" id="email-err"></span>
+        </div>
+
+        <div class="auth-field">
+          <div class="auth-label-row">
+            <label for="password" class="auth-label">Password</label>
+            <span class="auth-forgot">FORGOT &rarr;</span>
+          </div>
+          <div class="auth-input-wrap">
+            <input id="password" name="password" type="password"
+                   autocomplete="current-password" required class="auth-input" />
+            <button type="button" class="auth-eye" id="toggle-pw" aria-label="Toggle password visibility">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="auth-field-error" id="pw-err"></span>
+        </div>
+
+        <label class="auth-check">
+          <input type="checkbox" checked />
+          <span class="auth-checkmark"></span>
+          STAY SIGNED IN
+        </label>
+
+        <button type="submit" class="auth-submit">ENTER LIBRARY &rarr;</button>
       </form>
 
-      <p style="margin-top:1rem;font-size:0.9rem;">
-        New here? <a class="link" href="register.html">Register</a>
-      </p>
-
-      <div data-backend-toggle class="card-toggle"></div>
-    </section>
+      <p class="auth-switch">NEW HERE? <a href="register.html" class="auth-link">CREATE ACCOUNT</a></p>
+    </div>
   </main>
 
   <script src="js/config.js"></script>
-  <script defer src="js/backend-toggle.js"></script>
   <script type="module" src="js/login.js"></script>
+  <script>
+    document.getElementById("toggle-pw").addEventListener("click", function () {
+      var pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    });
+  </script>
 </body>
 </html>

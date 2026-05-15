@@ -3,40 +3,75 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Music Subscription — Register</title>
+  <title>Music — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <main class="center">
-    <section class="card">
-      <h1>Create account</h1>
-      <p class="subtitle">It only takes a moment</p>
+<body class="auth-body">
+  <main class="auth-layout">
+    <div class="auth-panel">
 
-      <div id="error" class="error"></div>
+      <span class="auth-step">— 02 / CREATE ACCOUNT</span>
 
-      <form id="register-form" novalidate>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required />
+      <h1 class="auth-heading">Join the <span class="auth-accent">beat.</span></h1>
+      <p class="auth-sub">Create your account and start building the library that moves with you.</p>
 
-        <label for="user_name">Username</label>
-        <input id="user_name" name="user_name" type="text" autocomplete="username" required />
+      <div id="error" class="error auth-error"></div>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="new-password" required />
+      <form id="register-form" novalidate class="auth-form">
 
-        <button type="submit" class="btn-block">Register</button>
+        <div class="auth-field">
+          <label for="email" class="auth-label">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email"
+                 placeholder="you@studio.fm" required class="auth-input" />
+          <span class="auth-field-error" id="email-err"></span>
+        </div>
+
+        <div class="auth-field">
+          <label for="user_name" class="auth-label">Username</label>
+          <input id="user_name" name="user_name" type="text" autocomplete="username"
+                 placeholder="your display name" required class="auth-input" />
+          <span class="auth-field-error" id="name-err"></span>
+        </div>
+
+        <div class="auth-field">
+          <label for="password" class="auth-label">Password</label>
+          <div class="auth-input-wrap">
+            <input id="password" name="password" type="password"
+                   autocomplete="new-password" placeholder="••••••••" required class="auth-input" />
+            <button type="button" class="auth-eye" id="toggle-pw" aria-label="Toggle password visibility">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="auth-strength">
+            <div class="auth-strength-fill" id="pw-strength-fill"></div>
+          </div>
+          <div class="auth-strength-row">
+            <span class="auth-field-error" id="pw-err"></span>
+            <span class="auth-strength-label" id="pw-strength-label"></span>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit">CREATE ACCOUNT &rarr;</button>
       </form>
 
-      <p style="margin-top:1rem;font-size:0.9rem;">
-        Already have an account? <a class="link" href="index.html">Login</a>
-      </p>
-
-      <div data-backend-toggle class="card-toggle"></div>
-    </section>
+      <p class="auth-switch">ALREADY HAVE ONE? <a href="index.html" class="auth-link">SIGN IN</a></p>
+    </div>
   </main>
 
   <script src="js/config.js"></script>
-  <script defer src="js/backend-toggle.js"></script>
   <script type="module" src="js/register.js"></script>
+  <script>
+    document.getElementById("toggle-pw").addEventListener("click", function () {
+      var pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    });
+  </script>
 </body>
 </html>
