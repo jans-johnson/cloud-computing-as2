@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 # Repo layout: app.py imports config/ and core/ from the parent
 COPY config /app/config
 COPY core /app/core
+# Dataset is read by core/music.py to canonicalise query input
+# (case-insensitive search); resolves to /app/data at runtime.
+COPY data /app/data
 COPY backend-ec2/app.py /app/backend-ec2/app.py
 COPY backend-ec2/__init__.py /app/backend-ec2/__init__.py
 
