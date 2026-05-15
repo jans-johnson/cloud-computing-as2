@@ -13,10 +13,17 @@
   <main class="auth-layout">
     <div class="auth-panel">
 
-      <span class="auth-step">— 01 / SIGN IN</span>
+      <h1 class="auth-heading">Sign <span class="auth-accent">in.</span></h1>
 
-      <h1 class="auth-heading">Press <span class="auth-accent">play.</span></h1>
-      <p class="auth-sub">Sign in to resume your library and pick up where the music left off.</p>
+      <div class="backend-bar">
+        <span class="backend-label">Backend</span>
+        <div class="backend-pills" id="backend-pills">
+          <button class="pill" data-backend="lambda">Lambda</button>
+          <button class="pill" data-backend="ecs">ECS</button>
+          <button class="pill" data-backend="ec2">EC2</button>
+        </div>
+        <span class="backend-url" id="backend-url"></span>
+      </div>
 
       <div id="error" class="error auth-error"></div>
 
@@ -26,14 +33,10 @@
           <label for="email" class="auth-label">Email</label>
           <input id="email" name="email" type="email" autocomplete="email"
                  placeholder="you@studio.fm" required class="auth-input" />
-          <span class="auth-field-error" id="email-err"></span>
         </div>
 
         <div class="auth-field">
-          <div class="auth-label-row">
-            <label for="password" class="auth-label">Password</label>
-            <span class="auth-forgot">FORGOT &rarr;</span>
-          </div>
+          <label for="password" class="auth-label">Password</label>
           <div class="auth-input-wrap">
             <input id="password" name="password" type="password"
                    autocomplete="current-password" required class="auth-input" />
@@ -45,23 +48,47 @@
               </svg>
             </button>
           </div>
-          <span class="auth-field-error" id="pw-err"></span>
         </div>
 
-        <label class="auth-check">
-          <input type="checkbox" checked />
-          <span class="auth-checkmark"></span>
-          STAY SIGNED IN
-        </label>
-
-        <button type="submit" class="auth-submit">ENTER LIBRARY &rarr;</button>
+        <button type="submit" class="auth-submit">Sign in &rarr;</button>
       </form>
 
-      <p class="auth-switch">NEW HERE? <a href="register.html" class="auth-link">CREATE ACCOUNT</a></p>
+      <p class="auth-switch">New here? <a href="register.html" class="auth-link">Create account</a></p>
     </div>
   </main>
 
   <script src="js/config.js"></script>
+  <script>
+    // Backend selector — pick which backend to authenticate against.
+    // Wired to the verified window.APP_CONFIG (config.js); setActiveBackend
+    // persists the choice and reloads so login.js targets the chosen API.
+    (function () {
+      const cfg = window.APP_CONFIG;
+      const pills = document.getElementById("backend-pills");
+      const urlEl = document.getElementById("backend-url");
+
+      function refresh() {
+        const active = cfg.getActiveBackend();
+        pills.querySelectorAll(".pill").forEach(function (btn) {
+          const key = btn.dataset.backend;
+          btn.classList.toggle("pill-active", key === active);
+          btn.disabled = !cfg.isConfigured(key);
+          if (!cfg.isConfigured(key)) {
+            btn.title = "URL not configured in js/config.js";
+          }
+        });
+        urlEl.textContent = cfg.BACKENDS[active] || "";
+      }
+
+      pills.addEventListener("click", function (e) {
+        const btn = e.target.closest(".pill");
+        if (!btn || btn.disabled) return;
+        cfg.setActiveBackend(btn.dataset.backend);
+      });
+
+      refresh();
+    })();
+  </script>
   <script type="module" src="js/login.js"></script>
   <script>
     document.getElementById("toggle-pw").addEventListener("click", function () {
