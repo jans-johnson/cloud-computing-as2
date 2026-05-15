@@ -8,7 +8,7 @@
 // at localhost:8080 via DevTools without touching this file).
 (function () {
   const BACKENDS = {
-    ec2:    "http://ec2-54-196-95-55.compute-1.amazonaws.com",
+    ec2:    "http://ec2-34-228-216-0.compute-1.amazonaws.com",
     ecs:    "http://music-app-alb-1181840167.us-east-1.elb.amazonaws.com",
     lambda: "https://jfm18fmx23.execute-api.us-east-1.amazonaws.com/prod",
   };
