@@ -13,12 +13,63 @@ Queries that filter only on year or only on album fall back to Scan.
 """
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from boto3.dynamodb.conditions import Key, Attr
 
 from config import MUSIC_TITLE_GSI, MUSIC_YEAR_LSI
 from .db import get_music_table
 
 SEP = "#"
+
+
+# --- Case-insensitive query support -------------------------------------
+#
+# DynamoDB key comparisons are byte-exact, so a marker typing
+# "taylor swift" would miss the canonically-cased "Taylor Swift" row.
+# We keep the strict key schema (Query on PK/GSI/LSI stays intact) and
+# instead canonicalise user input at the application layer: the dataset
+# domain is small and has no case/space collisions, so each lowercased
+# value maps to exactly one stored value. Built once at import; on any
+# failure we degrade to identity (queries still run, just case-sensitive).
+_DATASET = Path(__file__).resolve().parents[1] / "data" / "2026a2_songs.json"
+
+
+def _build_canonical_maps() -> dict[str, dict[str, str]]:
+    maps = {"artist": {}, "title": {}, "album": {}}
+    try:
+        raw = json.loads(_DATASET.read_text(encoding="utf-8"))
+        songs = raw["songs"] if isinstance(raw, dict) and "songs" in raw else raw
+        for s in songs:
+            for field in maps:
+                val = str(s.get(field, "")).strip()
+                if val:
+                    maps[field].setdefault(val.lower(), val)
+    except Exception:
+        # Missing/unreadable dataset — fall back to case-sensitive behaviour
+        # rather than breaking the endpoint.
+        pass
+    return maps
+
+
+_CANONICAL = _build_canonical_maps()
+
+
+def _canonical(field: str, value: str | None) -> str | None:
+    """Resolve trimmed/cased user input to the stored canonical value.
+
+    Unresolved input (genuinely absent, or a partial like "taylor") is
+    returned trimmed as-is so the query still runs and correctly yields
+    "No result is retrieved" — partial matching is intentionally not
+    supported, per the brief.
+    """
+    if value is None:
+        return None
+    trimmed = value.strip()
+    if not trimmed:
+        return None
+    return _CANONICAL.get(field, {}).get(trimmed.lower(), trimmed)
 
 
 def music_composite_sort_key(title: str, album: str) -> str:
@@ -67,7 +118,14 @@ def query_music(
       otherwise (year only, album only, no fields) -> Scan with FilterExpression
     """
     table = get_music_table()
-    year = str(year) if year is not None else None
+
+    # Case-insensitive: resolve user input to the canonical stored value
+    # before building the (byte-exact) key conditions. Applied centrally
+    # here so all three backends inherit it.
+    artist = _canonical("artist", artist)
+    title = _canonical("title", title)
+    album = _canonical("album", album)
+    year = str(year).strip() if year is not None and str(year).strip() else None
 
     if artist:
         if year and not (title or album):
